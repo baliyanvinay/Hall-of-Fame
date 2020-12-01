@@ -12,4 +12,6 @@ urlpatterns = [
     path('signup',views.SignUp.as_view(),name='signup'),
     path('login',auth_views.LoginView.as_view(),name='login'),
     path('logout',auth_views.LogoutView.as_view(),name='logout'),
+    # Hall Routing
+    path('halloffame/create',views.CreateHall.as_view(),name='create_hall'),
 ]

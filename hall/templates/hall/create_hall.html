@@ -1,0 +1,11 @@
+{% extends 'hall/base.html' %}
+
+{% block content %}
+<div class="container">
+    <form method="POST">
+        {% csrf token %}
+        {{ form.as_p }}
+        <button type="submit">Create Hall</button>
+    </form>
+</div>
+{% endblock %}
