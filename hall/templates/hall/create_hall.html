@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container">
     <form method="POST">
-        {% csrf token %}
+        {% csrf_token %}
         {{ form.as_p }}
         <button type="submit">Create Hall</button>
     </form>

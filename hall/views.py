@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
@@ -18,3 +18,9 @@ class CreateHall(generic.CreateView):
     fields=['title']
     template_name='hall/create_hall.html'
     success_url=reverse_lazy('home')
+
+    def form_valid(self, form):
+        # Assigning self.request.user to form instance user
+        form.instance.user=self.request.user
+        super(CreateHall, self).form_valid(form) # called super for remaining operation of 
+        return redirect('home')
