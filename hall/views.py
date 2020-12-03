@@ -47,3 +47,8 @@ class UpdateHall(generic.UpdateView):
     template_name='hall/update_hall.html'
     fields=['title'] # this is what user is allowed to change
     success_url=reverse_lazy('dashboard')
+
+class DeleteHall(generic.DeleteView):
+    model=Hall
+    template_name='hall/delete_hall.html'
+    success_url=reverse_lazy('dashboard')
