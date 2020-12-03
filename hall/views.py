@@ -41,3 +41,9 @@ class CreateHall(generic.CreateView):
 class DetailHall(generic.DetailView):
     model=Hall
     template_name='hall/detail_hall.html'
+
+class UpdateHall(generic.UpdateView):
+    model=Hall
+    template_name='hall/update_hall.html'
+    fields=['title'] # this is what user is allowed to change
+    success_url=reverse_lazy('dashboard')
