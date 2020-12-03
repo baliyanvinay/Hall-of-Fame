@@ -3,8 +3,8 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
-from .models import Hall
-from .forms import VideoForm
+from .models import Hall, Video
+from .forms import VideoForm, SearchForm
 
 # Create your views here.
 def home(request):
@@ -56,4 +56,16 @@ class DeleteHall(generic.DeleteView):
 
 def add_video(request, pk):
     form=VideoForm()
-    return render(request, template_name='hall/add_video.html',context={'form':form})
+    search_form=SearchForm()
+
+    if request.method=='POST':
+        # Create Video object on POST
+        filled_form=VideoForm(request.POST)
+        if filled_form.is_valid():
+            video=Video()
+            video.title=filled_form.cleaned_data['title']
+            video.url=filled_form.cleaned_data['url']
+            video.youtube_id=filled_form.cleaned_data['youtube_id']
+            video.hall=Hall.objects.get(pk=pk)
+            video.save()
+    return render(request, template_name='hall/add_video.html',context={'form':form, 'search_form':search_form})
