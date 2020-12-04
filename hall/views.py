@@ -6,6 +6,8 @@ from django.contrib.auth import authenticate, login
 from .models import Hall, Video
 from .forms import VideoForm, SearchForm
 
+YOUTUBE_API='AIzaSyCJ8dCJ-vti7vZnxWdBAsrOyAWnrg5uCtg'
+
 # Create your views here.
 def home(request):
     return render(request, template_name='hall/home.html')
