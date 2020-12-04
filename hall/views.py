@@ -5,6 +5,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from .models import Hall, Video
 from .forms import VideoForm, SearchForm
+from django.http import Http404
+from django.forms.utils import ErrorList
+import urllib
+import requests
 
 YOUTUBE_API='AIzaSyCJ8dCJ-vti7vZnxWdBAsrOyAWnrg5uCtg'
 
@@ -59,15 +63,31 @@ class DeleteHall(generic.DeleteView):
 def add_video(request, pk):
     form=VideoForm()
     search_form=SearchForm()
+    hall=Hall.objects.get(pk=pk)
+    if not hall.user==request.user:
+       raise Http404
 
     if request.method=='POST':
         # Create Video object on POST
         filled_form=VideoForm(request.POST)
         if filled_form.is_valid():
             video=Video()
-            video.title=filled_form.cleaned_data['title']
+            video.hall=hall
             video.url=filled_form.cleaned_data['url']
-            video.youtube_id=filled_form.cleaned_data['youtube_id']
-            video.hall=Hall.objects.get(pk=pk)
-            video.save()
-    return render(request, template_name='hall/add_video.html',context={'form':form, 'search_form':search_form})
+            parsed_url=urllib.parse.urlparse(video.url)
+            video_id=urllib.parse.parse_qs(parsed_url.query).get('v') # v has the youtube id in the url
+            if video_id:
+                video.youtube_id=video_id[0]
+                response=requests.get(f'https://youtube.googleapis.com/youtube/v3/videos?part=snippet%2CcontentDetails%2Cstatistics&id={video_id[0]}&key={YOUTUBE_API}')
+                json=response.json()
+                video.title=json['items'][0]['snippet']['title']
+                video.save()
+                return redirect('detail_hall', pk)
+            else:
+                errors=filled_form._errors.setdefault('url',ErrorList())
+                errors.append('Need to be a YouTube Url')
+    return render(request, template_name='hall/add_video.html',context={
+        'form':form, 
+        'search_form':search_form,
+        'hall':hall
+        })
