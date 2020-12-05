@@ -93,4 +93,7 @@ def add_video(request, pk):
         })
 
 def video_search(request):
-    return JsonResponse({})
+    search_form=SearchForm(request.GET)
+    if search_form.is_valid():
+        return JsonResponse({'Hello':search_form.cleaned_data['search_term']})
+    return JsonResponse({'Hello':'Nothing'})
