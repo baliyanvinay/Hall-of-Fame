@@ -5,7 +5,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login
 from .models import Hall, Video
 from .forms import VideoForm, SearchForm
-from django.http import Http404
+from django.http import Http404, JsonResponse
 from django.forms.utils import ErrorList
 import urllib
 import requests
@@ -91,3 +91,6 @@ def add_video(request, pk):
         'search_form':search_form,
         'hall':hall
         })
+
+def video_search(request):
+    return JsonResponse({})
