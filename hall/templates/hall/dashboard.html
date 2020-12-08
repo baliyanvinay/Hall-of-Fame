@@ -3,9 +3,29 @@
 {% block content %}
 <div class="container">
     <div class="text-center">
-        <h1>{{ user.username }}'s Hall of Fames</h1>
+        <h1>{{ user.username|capfirst }}'s Hall of Fames</h1>
         <a href="{% url 'create_hall' %}" class="btn btn-primary">Create New Hall</a>
     </div>
+
+    <!--Displaying the list of all the vidoes in the hall-->
+    {% for hall in halls %}
+    <div class="row">
+        {% for video in hall.video_set.all %}
+        <div class="col-md-4 mt-3">
+            <div class="card mb-4 shadow-sm">
+                <iframe width="100%" height="225" src="https://www.youtube.com/embed/{{ video.youtube_id }}"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen>
+                </iframe>
+                <div class="card-body">
+                    <p class="card-text">{{ video.title }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endfor %}
 </div>
 
 {% endblock %}
