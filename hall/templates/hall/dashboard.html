@@ -9,6 +9,12 @@
 
     <!--Displaying the list of all the vidoes in the hall-->
     {% for hall in halls %}
+    <h2><a href="{% url 'detail_hall' hall.id%}">{{ hall.title }}</a></h2>
+
+    <a href="{% url 'delete_hall' hall.id %}" class="btn btn-danger">Delete Hall</a>
+    <a href="{% url 'update_hall' hall.id %}" class="btn btn-primary">Edit Hall</a>
+    <a href="{% url 'add_video' hall.id %}" class="btn btn-primary">Add Video to Hall</a>
+
     <div class="row">
         {% for video in hall.video_set.all %}
         <div class="col-md-4 mt-3">
