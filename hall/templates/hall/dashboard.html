@@ -1,5 +1,11 @@
 {% extends 'hall/base.html' %}
 
 {% block content %}
-DASHBOARD
+<div class="container">
+    <div class="text-center">
+        <h1>{{ user.username }}'s Hall of Fames</h1>
+        <a href="{% url 'create_hall' %}" class="btn btn-primary">Create New Hall</a>
+    </div>
+</div>
+
 {% endblock %}

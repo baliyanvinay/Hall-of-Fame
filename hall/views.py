@@ -17,7 +17,9 @@ def home(request):
     return render(request, template_name='hall/home.html')
 
 def dashboard(request):
-    return render(request, template_name='hall/dashboard.html')
+    halls=Hall.objects.filter(user=request.user)
+
+    return render(request, template_name='hall/dashboard.html', context={'halls':halls})
 
 class SignUp(generic.CreateView):
     form_class=UserCreationForm
