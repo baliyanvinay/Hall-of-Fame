@@ -39,13 +39,13 @@ class CreateHall(generic.CreateView):
     model=Hall
     fields=['title']
     template_name='hall/create_hall.html'
-    success_url=reverse_lazy('home')
+    success_url=reverse_lazy('dashboard')
 
     def form_valid(self, form):
         # Assigning self.request.user to form instance user
         form.instance.user=self.request.user
         super(CreateHall, self).form_valid(form) # called super for remaining operation
-        return redirect('home')
+        return redirect('dashboard')
 
 class DetailHall(generic.DetailView):
     model=Hall
