@@ -60,6 +60,11 @@ class DeleteHall(generic.DeleteView):
     template_name='hall/delete_hall.html'
     success_url=reverse_lazy('dashboard')
 
+class DeleteVideo(generic.DeleteView):
+    model=Video
+    template_name='hall/delete_video.html'
+    success_url=reverse_lazy('dashboard')
+
 def add_video(request, pk):
     form=VideoForm()
     search_form=SearchForm()
