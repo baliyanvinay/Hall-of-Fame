@@ -5,12 +5,13 @@
     <h1>{{ hall.title }}</h1>
     <h2 class="text-muted">{{ hall.user.username|capfirst }}</h2>
 
+    {% if user.id == hall.user.id %}
     <a href="{% url 'delete_hall' hall.id %}" class="btn btn-danger">Delete Hall</a>
     <a href="{% url 'update_hall' hall.id %}" class="btn btn-primary">Edit Hall</a>
     <a href="{% url 'add_video' hall.id %}" class="btn btn-primary">Add Video to Hall</a>
+    {% endif %}
 
     <div class="row">
-
         {% for video in hall.video_set.all %}
         <div class="col-md-4 mt-3">
             <div class="card mb-4 shadow-sm">
@@ -21,10 +22,14 @@
                 </iframe>
                 <div class="card-body">
                     <p class="card-text">{{ video.title }}</p>
+                    {% if user.id == hall.user.id %}
+                    <a href="{% url 'delete_video' video.id %}" class="btn btn-danger">Delete Video</a>
+                    {% endif %}
                 </div>
             </div>
         </div>
         {% endfor %}
     </div>
+
 </div>
 {% endblock %}
