@@ -9,6 +9,8 @@ from django.http import Http404, JsonResponse
 from django.forms.utils import ErrorList
 import urllib
 import requests
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 YOUTUBE_API='AIzaSyCJ8dCJ-vti7vZnxWdBAsrOyAWnrg5uCtg'
 
@@ -18,6 +20,7 @@ def home(request):
     popular_halls=Hall.objects.all().order_by('-id')[:3]
     return render(request, template_name='hall/home.html', context={'recent_halls':recent_halls, 'popular_halls':popular_halls})
 
+@login_required
 def dashboard(request):
     halls=Hall.objects.filter(user=request.user)
 
@@ -37,7 +40,7 @@ class SignUp(generic.CreateView):
         return view
 
 
-class CreateHall(generic.CreateView):
+class CreateHall(LoginRequiredMixin, generic.CreateView):
     model=Hall
     fields=['title']
     template_name='hall/create_hall.html'
@@ -53,22 +56,29 @@ class DetailHall(generic.DetailView):
     model=Hall
     template_name='hall/detail_hall.html'
 
-class UpdateHall(generic.UpdateView):
+class UpdateHall(LoginRequiredMixin, generic.UpdateView):
     model=Hall
     template_name='hall/update_hall.html'
     fields=['title'] # this is what user is allowed to change
     success_url=reverse_lazy('dashboard')
 
-class DeleteHall(generic.DeleteView):
+class DeleteHall(LoginRequiredMixin, generic.DeleteView):
     model=Hall
     template_name='hall/delete_hall.html'
     success_url=reverse_lazy('dashboard')
 
-class DeleteVideo(generic.DeleteView):
+class DeleteVideo(LoginRequiredMixin, generic.DeleteView):
     model=Video
     template_name='hall/delete_video.html'
     success_url=reverse_lazy('dashboard')
 
+    def get_object(self):
+        video=super().get_object()
+        if not video.hall.user == self.request.user:
+            raise Http404
+        return video
+
+@login_required
 def add_video(request, pk):
     form=VideoForm()
     search_form=SearchForm()
@@ -101,6 +111,7 @@ def add_video(request, pk):
         'hall':hall
         })
 
+@login_required
 def video_search(request):
     search_form=SearchForm(request.GET)
     if search_form.is_valid():
